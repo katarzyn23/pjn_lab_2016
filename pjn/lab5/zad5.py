@@ -34,33 +34,50 @@ def markow_from_string(stringName):
 	return markowDict
 	
 	
+with open('pap_small.txt', 'r') as ngramsFile:
+	ngrams=ngramsFile.read().replace('\n', '')
+	ngramsList = ngrams.split()
+		
+		
 def get_one_of(list):
 	if len(list) != 0:
 		rand = randint(0,len(list)-1)
 		return list.pop(rand)
 	else:
-		return 'w'
+		rand = 'w'
+		
+def generate_article(first_word, markowDict):
+	article = first_word
+	runner = get_one_of(markowDict[first_word])
+	for j in range(50):
+		article = article + ' ' + runner
+		runner = get_one_of(markowDict[runner])
+	return article
+	
+def markow_from_pap():
+	markowDict = {}
+	simpleArticle = ""
+	i = 1
+	with codecs.open('pap_small.txt', 'r', 'utf-8') as papFile:
+		for line in papFile:
+			if line[0] != '#':
+				simpleArticle = simpleArticle + line	
+			else:
+				tmpDict = markow_from_string(simpleArticle)
+				markowDict = dict(tmpDict.items() + markowDict.items())
+				simpleArticle = ''
+	return markowDict
 
-markowDict = {}
-simpleArticle = ""
-i = 1
-with codecs.open('pap.txt', 'r', 'utf-8') as papFile:
-	for line in papFile:
-		if line[0] != '#':
-			simpleArticle = simpleArticle + line	
-		else:
-			tmpDict = markow_from_string(simpleArticle)
-			markowDict = dict(tmpDict.items() + markowDict.items())
-			simpleArticle = ''
+#cw1 - markow chain from ngrams
+ngrams_markow = markow_from_file
 
-			
-out = 'Rewanzowy'
-runner = get_one_of(markowDict[out])
-out = out + ' ' + runner
-for j in range(50):
-	runner = get_one_of(markowDict[runner])
-	out = out + ' ' + runner
-print out
+#cw2 - generated article from pap
+dict = markow_from_pap()
+print generate_article('Madeleine', dict)
+
+#cw3 - generated polish word
+
+
 			
 		
 		
