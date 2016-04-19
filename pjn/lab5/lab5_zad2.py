@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import codecs
+import random
 import sys
 from random import randint
+import time
 
 def markow_from_pap(file_name, ngrams_lvl):
 	markow_dict = {}
 	simple_article = ''
-	with open(file_name, 'r') as pap_file:
+	with codecs.open(file_name, 'r', 'utf-8') as pap_file:
 		for line in pap_file:
 			if line[0] != '#':
 				simple_article = simple_article + line	
@@ -53,7 +56,11 @@ def generate_article(first_word, markow_dict):
 	runner = get_one_for_article(markow_dict[first_word])
 	for j in range(50):
 		article = article + ' ' + runner
-		runner = get_one_for_article(markow_dict[runner])
+		if len(markow_dict[runner]) != 0:
+			runner = get_one_for_article(markow_dict[runner])
+		else:
+			runner = get_one_for_article(markow_dict[random.choice(markow_dict.keys())])
+	article += '.'
 	return article
 	
 def get_one_for_article(list):
@@ -63,9 +70,11 @@ def get_one_for_article(list):
 		return out_list
 	else:
 		rand = 'w'
-		
-		
-#cw2 - generated article from pap
+
+start = time.time()
 lvl = int(sys.argv[2])
 dict = markow_from_pap(sys.argv[1], lvl)
-print generate_article('Madeleine', dict)
+print dict['Stronnictwa']
+print generate_article('Stronnictwa', dict)
+end = time.time()
+print(end - start)
