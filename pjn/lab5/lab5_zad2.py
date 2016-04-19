@@ -54,12 +54,13 @@ def prepare_ngrams(text, ngrams_lvl):
 def generate_article(first_word, markow_dict):
 	article = first_word
 	runner = get_one_for_article(markow_dict[first_word])
+	article = article + ' ' + runner
 	for j in range(50):
-		article = article + ' ' + runner
 		if len(markow_dict[runner]) != 0:
 			runner = get_one_for_article(markow_dict[runner])
 		else:
 			runner = get_one_for_article(markow_dict[random.choice(markow_dict.keys())])
+		article = article + ' ' + runner
 	article += '.'
 	return article
 	
@@ -74,7 +75,6 @@ def get_one_for_article(list):
 start = time.time()
 lvl = int(sys.argv[2])
 dict = markow_from_pap(sys.argv[1], lvl)
-print dict['Stronnictwa']
-print generate_article('Stronnictwa', dict)
+print generate_article(random.choice(dict.keys()), dict)
 end = time.time()
 print(end - start)
